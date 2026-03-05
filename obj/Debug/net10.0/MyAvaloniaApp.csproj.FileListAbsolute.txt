@@ -72,3 +72,4 @@ C:\Users\itzme\MyAvaloniaApp\obj\Debug\net10.0\refint\MyAvaloniaApp.dll
 C:\Users\itzme\MyAvaloniaApp\obj\Debug\net10.0\MyAvaloniaApp.pdb
 C:\Users\itzme\MyAvaloniaApp\obj\Debug\net10.0\MyAvaloniaApp.genruntimeconfig.cache
 C:\Users\itzme\MyAvaloniaApp\obj\Debug\net10.0\ref\MyAvaloniaApp.dll
+C:\Users\itzme\MyAvaloniaApp\obj\Debug\net10.0\MyAvaloniaApp.sourcelink.json
