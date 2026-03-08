@@ -1,20 +1,580 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:MyAvaloniaApp.ViewModels"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="MyAvaloniaApp.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
-        Icon="/Assets/avalonia-logo.ico"
-        Title="MyAvaloniaApp">
+        Title="تدبير الموارد البشرية"
+        Width="1400"
+        Height="900"
+        FlowDirection="RightToLeft"
+        WindowStartupLocation="CenterScreen">
 
-    <Design.DataContext>
-        <!-- This only sets the DataContext for the previewer in an IDE,
-             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-        <vm:MainWindowViewModel/>
-    </Design.DataContext>
+    <Window.Styles>
 
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <Style Selector="Border.card">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="CornerRadius" Value="16"/>
+            <Setter Property="BoxShadow" Value="0 4 6 0 #10000000"/>
+        </Style>
 
+        <Style Selector="Border.stat-card">
+            <Setter Property="CornerRadius" Value="12"/>
+            <Setter Property="Padding" Value="16"/>
+            <Setter Property="BorderThickness" Value="2"/>
+        </Style>
+
+        <!-- Menu button -->
+        <Style Selector="Button.menu-btn">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="CornerRadius" Value="16"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#E5E7EB"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="VerticalAlignment" Value="Stretch"/>
+            <Setter Property="Transitions">
+                <Transitions>
+                    <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.18"/>
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="Button.menu-btn /template/ ContentPresenter">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="CornerRadius" Value="16"/>
+        </Style>
+        <Style Selector="Button.menu-btn:pointerover">
+            <Setter Property="RenderTransform" Value="translateY(-6px)"/>
+            <Setter Property="BorderBrush" Value="#7C3AED"/>
+        </Style>
+        <Style Selector="Button.menu-btn:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="#F5F3FF"/>
+        </Style>
+        <!-- Hide underline by default -->
+        <Style Selector="Button.menu-btn Border.underline">
+            <Setter Property="IsVisible" Value="False"/>
+        </Style>
+        <!-- Show underline on hover -->
+        <Style Selector="Button.menu-btn:pointerover Border.underline">
+            <Setter Property="IsVisible" Value="True"/>
+        </Style>
+
+        <!-- Typography -->
+        <Style Selector="TextBlock.title">
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
+        <Style Selector="TextBlock.stat-number">
+            <Setter Property="FontSize" Value="32"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+        </Style>
+        <Style Selector="TextBlock.stat-label">
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,0,0,8"/>
+        </Style>
+        <!-- Global Arabic font -->
+        <Style Selector="TextBlock">
+            <Setter Property="FontFamily" Value="Cairo,Tajawal,Segoe UI"/>
+            <Setter Property="Foreground" Value="#1E293B"/>
+        </Style>
+    </Window.Styles>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- ═══════════ HEADER ═══════════ -->
+        <Border Grid.Row="0">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+                    <GradientStop Color="#4F46E5" Offset="0"/>
+                    <GradientStop Color="#7C3AED" Offset="0.5"/>
+                    <GradientStop Color="#2563EB" Offset="1"/>
+                </LinearGradientBrush>
+            </Border.Background>
+            <Border Padding="24">
+                <StackPanel Spacing="16">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Column="0" Background="#20FFFFFF" CornerRadius="12" Padding="16,8">
+                            <StackPanel Orientation="Horizontal" Spacing="12">
+                                <Border Width="40" Height="40" Background="#33FFFFFF" CornerRadius="8">
+                                    <Path Data="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                                          Stroke="White" StrokeThickness="2" Stretch="Uniform" Margin="8"/>
+                                </Border>
+                                <TextBlock Text="تدبير الموارد البشرية"
+                                           FontSize="20" FontWeight="Bold"
+                                           Foreground="White" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+                        <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                            <!-- User pill -->
+                            <Border CornerRadius="24" Padding="4,4,16,4">
+                                <Border.Background>
+                                    <SolidColorBrush Color="#33FFFFFF"/>
+                                </Border.Background>
+                                <StackPanel Orientation="Horizontal" Spacing="10">
+                                    <Border Width="36" Height="36" CornerRadius="18" Background="#7C3AED">
+                                        <Path Data="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                                              Fill="White" Width="18" Height="18"
+                                              HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                    <StackPanel VerticalAlignment="Center" Spacing="1">
+                                        <TextBlock Text="مرحباً" Foreground="#B3FFFFFF" FontSize="10"/>
+                                        <TextBlock Text="محمد ايت دحمانت" Foreground="White" FontWeight="Bold" FontSize="13"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+                            <!-- Change password pill -->
+                            <Border CornerRadius="24" Padding="4,4,16,4" Cursor="Hand">
+                                <Border.Background>
+                                    <SolidColorBrush Color="#33FFFFFF"/>
+                                </Border.Background>
+                                <StackPanel Orientation="Horizontal" Spacing="10">
+                                    <Border Width="36" Height="36" CornerRadius="18" Background="#4F46E5">
+                                        <Path Data="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"
+                                              Stroke="White" StrokeThickness="1.5" Width="17" Height="17"
+                                              HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                    <StackPanel VerticalAlignment="Center" Spacing="1">
+                                        <TextBlock Text="الإعدادات" Foreground="#B3FFFFFF" FontSize="10"/>
+                                        <TextBlock Text="تغيير كلمة المرور" Foreground="White" FontWeight="Bold" FontSize="12"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+                            <!-- Logout pill -->
+                            <Border CornerRadius="24" Padding="4,4,16,4" Cursor="Hand">
+                                <Border.Background>
+                                    <SolidColorBrush Color="#33FFFFFF"/>
+                                </Border.Background>
+                                <StackPanel Orientation="Horizontal" Spacing="10">
+                                    <Border Width="36" Height="36" CornerRadius="18" Background="#EF4444">
+                                        <Path Data="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                                              Stroke="White" StrokeThickness="1.5" Width="17" Height="17"
+                                              HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                    <StackPanel VerticalAlignment="Center" Spacing="1">
+                                        <TextBlock Text="الجلسة" Foreground="#B3FFFFFF" FontSize="10"/>
+                                        <TextBlock Text="تسجيل الخروج" Foreground="White" FontWeight="Bold" FontSize="12"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </Grid>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Column="0" Background="#20FFFFFF" CornerRadius="12" Padding="16,12" Margin="0,0,6,0">
+                            <StackPanel>
+                                <TextBlock Text="الاكاديمية" Foreground="#B3FFFFFF" FontSize="11" Margin="0,0,0,4"/>
+                                <TextBlock Text="سوس ماسة" Foreground="White" FontWeight="Bold"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Grid.Column="1" Background="#20FFFFFF" CornerRadius="12" Padding="16,12" Margin="6,0,6,0">
+                            <StackPanel>
+                                <TextBlock Text="المديرية الاقليمية" Foreground="#B3FFFFFF" FontSize="11" Margin="0,0,0,4"/>
+                                <TextBlock Text="انزكان ايت ميلول" Foreground="White" FontWeight="Bold"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Grid.Column="2" Background="#20FFFFFF" CornerRadius="12" Padding="16,12" Margin="6,0,6,0">
+                            <StackPanel>
+                                <TextBlock Text="المؤسسة" Foreground="#B3FFFFFF" FontSize="11" Margin="0,0,0,4"/>
+                                <TextBlock Text="ثانوية الامام الجزولي الاعدادية" Foreground="White" FontWeight="Bold"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Grid.Column="3" Background="#20FFFFFF" CornerRadius="12" Padding="16,12" Margin="6,0,0,0">
+                            <StackPanel>
+                                <TextBlock Text="السنة الدراسية" Foreground="#B3FFFFFF" FontSize="11" Margin="0,0,0,4"/>
+                                <TextBlock Text="2025/2026" Foreground="White" FontWeight="Bold"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </StackPanel>
+            </Border>
+        </Border>
+
+        <!-- ═══════════ MAIN CONTENT ═══════════ -->
+        <Border Grid.Row="1">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                    <GradientStop Color="#F8FAFC" Offset="0"/>
+                    <GradientStop Color="#EFF6FF" Offset="0.5"/>
+                    <GradientStop Color="#EEF2FF" Offset="1"/>
+                </LinearGradientBrush>
+            </Border.Background>
+            <ScrollViewer>
+                <StackPanel Margin="24" Spacing="20">
+
+                    <!-- ── ROW 1: Buttons 1–5 ── -->
+                    <UniformGrid Columns="5" Rows="1" Height="160">
+
+                        <!-- 1: استيراد قاعدة المعطيات -->
+                        <Button Classes="menu-btn" Margin="0,0,8,0">
+                            <Grid RowDefinitions="*,4">
+                                <StackPanel Grid.Row="0" Spacing="12" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="12">
+                                    <Border Width="56" Height="56" CornerRadius="14">
+                                        <Border.Background>
+                                            <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                                                <GradientStop Color="#6366F1" Offset="0"/>
+                                                <GradientStop Color="#4F46E5" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Border.Background>
+                                        <Path Data="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                                              Stroke="White" StrokeThickness="2" Stretch="Uniform" Margin="13"/>
+                                    </Border>
+                                    <TextBlock Text="استيراد قاعدة المعطيات" FontWeight="Bold" FontSize="12" HorizontalAlignment="Center" TextWrapping="Wrap"/>
+                                </StackPanel>
+                                <Border Grid.Row="1" Classes="underline" CornerRadius="0,0,16,16" Background="#7C3AED"/>
+                            </Grid>
+                        </Button>
+
+                        <!-- 2: طلبات -->
+                        <Button Classes="menu-btn" Margin="8,0,8,0">
+                            <Grid RowDefinitions="*,4">
+                                <StackPanel Grid.Row="0" Spacing="12" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="12">
+                                    <Border Width="56" Height="56" CornerRadius="14">
+                                        <Border.Background>
+                                            <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                                                <GradientStop Color="#3B82F6" Offset="0"/>
+                                                <GradientStop Color="#2563EB" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Border.Background>
+                                        <Path Data="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                                              Stroke="White" StrokeThickness="2" Stretch="Uniform" Margin="13"/>
+                                    </Border>
+                                    <TextBlock Text="طلبات" FontWeight="Bold" FontSize="12" HorizontalAlignment="Center"/>
+                                </StackPanel>
+                                <Border Grid.Row="1" Classes="underline" CornerRadius="0,0,16,16" Background="#7C3AED"/>
+                            </Grid>
+                        </Button>
+
+                        <!-- 3: مسك الغياب -->
+                        <Button Classes="menu-btn" Margin="8,0,8,0">
+                            <Grid RowDefinitions="*,4">
+                                <StackPanel Grid.Row="0" Spacing="12" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="12">
+                                    <Border Width="56" Height="56" CornerRadius="14">
+                                        <Border.Background>
+                                            <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                                                <GradientStop Color="#F97316" Offset="0"/>
+                                                <GradientStop Color="#EA580C" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Border.Background>
+                                        <Path Data="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                                              Stroke="White" StrokeThickness="2" Stretch="Uniform" Margin="13"/>
+                                    </Border>
+                                    <TextBlock Text="مسك الغياب" FontWeight="Bold" FontSize="12" HorizontalAlignment="Center"/>
+                                </StackPanel>
+                                <Border Grid.Row="1" Classes="underline" CornerRadius="0,0,16,16" Background="#7C3AED"/>
+                            </Grid>
+                        </Button>
+
+                        <!-- 4: تعديل / اضافة موظف -->
+                        <Button Classes="menu-btn" Margin="8,0,8,0">
+                            <Grid RowDefinitions="*,4">
+                                <StackPanel Grid.Row="0" Spacing="12" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="12">
+                                    <Border Width="56" Height="56" CornerRadius="14">
+                                        <Border.Background>
+                                            <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                                                <GradientStop Color="#10B981" Offset="0"/>
+                                                <GradientStop Color="#059669" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Border.Background>
+                                        <Path Data="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
+                                              Stroke="White" StrokeThickness="2" Stretch="Uniform" Margin="13"/>
+                                    </Border>
+                                    <TextBlock Text="تعديل / اضافة موظف(ة)" FontWeight="Bold" FontSize="12" HorizontalAlignment="Center" TextWrapping="Wrap"/>
+                                </StackPanel>
+                                <Border Grid.Row="1" Classes="underline" CornerRadius="0,0,16,16" Background="#7C3AED"/>
+                            </Grid>
+                        </Button>
+
+                        <!-- 5: ضبط المعطيات -->
+                        <Button Classes="menu-btn" Margin="8,0,0,0">
+                            <Grid RowDefinitions="*,4">
+                                <StackPanel Grid.Row="0" Spacing="12" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="12">
+                                    <Border Width="56" Height="56" CornerRadius="14">
+                                        <Border.Background>
+                                            <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                                                <GradientStop Color="#8B5CF6" Offset="0"/>
+                                                <GradientStop Color="#7C3AED" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Border.Background>
+                                        <Path Data="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                                              Stroke="White" StrokeThickness="2" Stretch="Uniform" Margin="13"/>
+                                    </Border>
+                                    <TextBlock Text="ضبط المعطيات" FontWeight="Bold" FontSize="12" HorizontalAlignment="Center"/>
+                                </StackPanel>
+                                <Border Grid.Row="1" Classes="underline" CornerRadius="0,0,16,16" Background="#7C3AED"/>
+                            </Grid>
+                        </Button>
+
+                    </UniformGrid>
+
+                    <!-- ── ROW 2: Buttons 6–10 ── -->
+                    <UniformGrid Columns="5" Rows="1" Height="160">
+
+                        <!-- 6: مختلفات -->
+                        <Button Classes="menu-btn" Margin="0,0,8,0">
+                            <Grid RowDefinitions="*,4">
+                                <StackPanel Grid.Row="0" Spacing="12" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="12">
+                                    <Border Width="56" Height="56" CornerRadius="14">
+                                        <Border.Background>
+                                            <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                                                <GradientStop Color="#4B5563" Offset="0"/>
+                                                <GradientStop Color="#374151" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Border.Background>
+                                        <Path Data="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                                              Stroke="White" StrokeThickness="2" Stretch="Uniform" Margin="13"/>
+                                    </Border>
+                                    <TextBlock Text="مختلفات" FontWeight="Bold" FontSize="12" HorizontalAlignment="Center"/>
+                                </StackPanel>
+                                <Border Grid.Row="1" Classes="underline" CornerRadius="0,0,16,16" Background="#7C3AED"/>
+                            </Grid>
+                        </Button>
+
+                        <!-- 7: توقيت جماعي عن العمل -->
+                        <Button Classes="menu-btn" Margin="8,0,8,0">
+                            <Grid RowDefinitions="*,4">
+                                <StackPanel Grid.Row="0" Spacing="12" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="12">
+                                    <Border Width="56" Height="56" CornerRadius="14">
+                                        <Border.Background>
+                                            <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                                                <GradientStop Color="#EC4899" Offset="0"/>
+                                                <GradientStop Color="#DB2777" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Border.Background>
+                                        <Path Data="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                              Stroke="White" StrokeThickness="2" Stretch="Uniform" Margin="13"/>
+                                    </Border>
+                                    <TextBlock Text="توقيت جماعي عن العمل" FontWeight="Bold" FontSize="12" HorizontalAlignment="Center" TextWrapping="Wrap"/>
+                                </StackPanel>
+                                <Border Grid.Row="1" Classes="underline" CornerRadius="0,0,16,16" Background="#7C3AED"/>
+                            </Grid>
+                        </Button>
+
+                        <!-- 8: استفسارات - العمل -->
+                        <Button Classes="menu-btn" Margin="8,0,8,0">
+                            <Grid RowDefinitions="*,4">
+                                <StackPanel Grid.Row="0" Spacing="12" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="12">
+                                    <Border Width="56" Height="56" CornerRadius="14">
+                                        <Border.Background>
+                                            <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                                                <GradientStop Color="#06B6D4" Offset="0"/>
+                                                <GradientStop Color="#0891B2" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Border.Background>
+                                        <Path Data="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"
+                                              Stroke="White" StrokeThickness="2" Stretch="Uniform" Margin="13"/>
+                                    </Border>
+                                    <TextBlock Text="استفسارات - العمل" FontWeight="Bold" FontSize="12" HorizontalAlignment="Center" TextWrapping="Wrap"/>
+                                </StackPanel>
+                                <Border Grid.Row="1" Classes="underline" CornerRadius="0,0,16,16" Background="#7C3AED"/>
+                            </Grid>
+                        </Button>
+
+                        <!-- 9: قواعد العمل -->
+                        <Button Classes="menu-btn" Margin="8,0,8,0">
+                            <Grid RowDefinitions="*,4">
+                                <StackPanel Grid.Row="0" Spacing="12" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="12">
+                                    <Border Width="56" Height="56" CornerRadius="14">
+                                        <Border.Background>
+                                            <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                                                <GradientStop Color="#14B8A6" Offset="0"/>
+                                                <GradientStop Color="#0D9488" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Border.Background>
+                                        <Path Data="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
+                                              Stroke="White" StrokeThickness="2" Stretch="Uniform" Margin="13"/>
+                                    </Border>
+                                    <TextBlock Text="قواعد العمل" FontWeight="Bold" FontSize="12" HorizontalAlignment="Center"/>
+                                </StackPanel>
+                                <Border Grid.Row="1" Classes="underline" CornerRadius="0,0,16,16" Background="#7C3AED"/>
+                            </Grid>
+                        </Button>
+
+                        <!-- 10: مسح قاعدة المعطيات -->
+                        <Button Classes="menu-btn" Margin="8,0,0,0">
+                            <Grid RowDefinitions="*,4">
+                                <StackPanel Grid.Row="0" Spacing="12" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="12">
+                                    <Border Width="56" Height="56" CornerRadius="14">
+                                        <Border.Background>
+                                            <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                                                <GradientStop Color="#EF4444" Offset="0"/>
+                                                <GradientStop Color="#DC2626" Offset="1"/>
+                                            </LinearGradientBrush>
+                                        </Border.Background>
+                                        <Path Data="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                                              Stroke="White" StrokeThickness="2" Stretch="Uniform" Margin="13"/>
+                                    </Border>
+                                    <TextBlock Text="مسح قاعدة المعطيات" FontWeight="Bold" FontSize="12" HorizontalAlignment="Center" TextWrapping="Wrap"/>
+                                </StackPanel>
+                                <Border Grid.Row="1" Classes="underline" CornerRadius="0,0,16,16" Background="#7C3AED"/>
+                            </Grid>
+                        </Button>
+
+                    </UniformGrid>
+
+                    <!-- ── STATS: إحصاء الموظفين + إحصاء الغياب side by side ── -->
+                    <Grid ColumnDefinitions="*,16,*">
+
+                        <!-- إحصاء الموظفين -->
+                        <Border Classes="card" Grid.Column="0">
+                            <StackPanel>
+                                <Border CornerRadius="16,16,0,0" Padding="16">
+                                    <Border.Background>
+                                        <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+                                            <GradientStop Color="#3B82F6" Offset="0"/>
+                                            <GradientStop Color="#6366F1" Offset="1"/>
+                                        </LinearGradientBrush>
+                                    </Border.Background>
+                                    <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
+                                        <Path Data="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                                              Stroke="White" StrokeThickness="2" Width="22" Height="22"/>
+                                        <TextBlock Text="إحصاء الموظفين" Foreground="White" Classes="title"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Padding="20">
+                                    <StackPanel Spacing="14">
+                                        <Grid ColumnDefinitions="*,8,*,8,*">
+                                            <StackPanel Grid.Column="0">
+                                                <TextBlock Text="الذكور" Classes="stat-label" Foreground="#4B5563"/>
+                                                <Border Classes="stat-card" BorderBrush="#BFDBFE">
+                                                    <Border.Background><LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%"><GradientStop Color="#EFF6FF" Offset="0"/><GradientStop Color="#DBEAFE" Offset="1"/></LinearGradientBrush></Border.Background>
+                                                    <TextBlock Text="25" Classes="stat-number" Foreground="#2563EB"/>
+                                                </Border>
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="2">
+                                                <TextBlock Text="الإناث" Classes="stat-label" Foreground="#4B5563"/>
+                                                <Border Classes="stat-card" BorderBrush="#FBCFE8">
+                                                    <Border.Background><LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%"><GradientStop Color="#FCE7F3" Offset="0"/><GradientStop Color="#FBCFE8" Offset="1"/></LinearGradientBrush></Border.Background>
+                                                    <TextBlock Text="11" Classes="stat-number" Foreground="#DB2777"/>
+                                                </Border>
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="4">
+                                                <TextBlock Text="المجموع" Classes="stat-label" Foreground="#4B5563"/>
+                                                <Border Classes="stat-card" BorderBrush="#E9D5FF">
+                                                    <Border.Background><LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%"><GradientStop Color="#F3E8FF" Offset="0"/><GradientStop Color="#E9D5FF" Offset="1"/></LinearGradientBrush></Border.Background>
+                                                    <TextBlock Text="36" Classes="stat-number" Foreground="#7C3AED"/>
+                                                </Border>
+                                            </StackPanel>
+                                        </Grid>
+                                        <Grid ColumnDefinitions="*,8,*">
+                                            <Border Grid.Column="0" Classes="stat-card" BorderBrush="#A7F3D0">
+                                                <Border.Background><LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%"><GradientStop Color="#D1FAE5" Offset="0"/><GradientStop Color="#A7F3D0" Offset="1"/></LinearGradientBrush></Border.Background>
+                                                <StackPanel>
+                                                    <TextBlock Text="الإداريين" FontSize="13" Margin="0,0,0,4"/>
+                                                    <TextBlock Text="05" FontSize="28" FontWeight="Bold" Foreground="#059669"/>
+                                                </StackPanel>
+                                            </Border>
+                                            <Border Grid.Column="2" Classes="stat-card" BorderBrush="#FDE68A">
+                                                <Border.Background><LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%"><GradientStop Color="#FEF3C7" Offset="0"/><GradientStop Color="#FDE68A" Offset="1"/></LinearGradientBrush></Border.Background>
+                                                <StackPanel>
+                                                    <TextBlock Text="الأساتذة" FontSize="13" Margin="0,0,0,4"/>
+                                                    <TextBlock Text="31" FontSize="28" FontWeight="Bold" Foreground="#D97706"/>
+                                                </StackPanel>
+                                            </Border>
+                                        </Grid>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- إحصاء الغياب -->
+                        <Border Classes="card" Grid.Column="2">
+                            <StackPanel>
+                                <Border CornerRadius="16,16,0,0" Padding="16">
+                                    <Border.Background>
+                                        <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+                                            <GradientStop Color="#8B5CF6" Offset="0"/>
+                                            <GradientStop Color="#EC4899" Offset="1"/>
+                                        </LinearGradientBrush>
+                                    </Border.Background>
+                                    <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
+                                        <Path Data="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
+                                              Stroke="White" StrokeThickness="2" Width="22" Height="22"/>
+                                        <TextBlock Text="إحصاء الغياب" Foreground="White" Classes="title"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Padding="20">
+                                    <StackPanel Spacing="14">
+                                        <Grid ColumnDefinitions="*,8,*,8,*">
+                                            <StackPanel Grid.Column="0">
+                                                <TextBlock Text="رخصة بأجرة" FontSize="11" Foreground="#4B5563" Margin="0,0,0,6" HorizontalAlignment="Center"/>
+                                                <Border Height="60" Classes="stat-card" BorderBrush="#A7F3D0">
+                                                    <Border.Background><LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%"><GradientStop Color="#D1FAE5" Offset="0"/><GradientStop Color="#A7F3D0" Offset="1"/></LinearGradientBrush></Border.Background>
+                                                    <TextBlock Text="0" FontSize="22" FontWeight="Bold" Foreground="#059669" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                </Border>
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="2">
+                                                <TextBlock Text="رخصة بدون أجر" FontSize="11" Foreground="#4B5563" Margin="0,0,0,6" HorizontalAlignment="Center"/>
+                                                <Border Height="60" Classes="stat-card" BorderBrush="#FED7AA">
+                                                    <Border.Background><LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%"><GradientStop Color="#FFEDD5" Offset="0"/><GradientStop Color="#FED7AA" Offset="1"/></LinearGradientBrush></Border.Background>
+                                                    <TextBlock Text="0" FontSize="22" FontWeight="Bold" Foreground="#EA580C" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                </Border>
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="4">
+                                                <TextBlock Text="غير مبرر" FontSize="11" Foreground="#4B5563" Margin="0,0,0,6" HorizontalAlignment="Center"/>
+                                                <Border Height="60" Classes="stat-card" BorderBrush="#FECACA">
+                                                    <Border.Background><LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%"><GradientStop Color="#FEE2E2" Offset="0"/><GradientStop Color="#FECACA" Offset="1"/></LinearGradientBrush></Border.Background>
+                                                    <TextBlock Text="0" FontSize="22" FontWeight="Bold" Foreground="#DC2626" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                </Border>
+                                            </StackPanel>
+                                        </Grid>
+                                        <Grid ColumnDefinitions="*,8,*,8,*">
+                                            <StackPanel Grid.Column="0">
+                                                <TextBlock Text="رخصة الحج" FontSize="11" Foreground="#4B5563" Margin="0,0,0,6" HorizontalAlignment="Center"/>
+                                                <Border Height="60" Classes="stat-card" BorderBrush="#BFDBFE">
+                                                    <Border.Background><LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%"><GradientStop Color="#DBEAFE" Offset="0"/><GradientStop Color="#BFDBFE" Offset="1"/></LinearGradientBrush></Border.Background>
+                                                    <TextBlock Text="0" FontSize="22" FontWeight="Bold" Foreground="#2563EB" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                </Border>
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="2">
+                                                <TextBlock Text="رخصة مرض" FontSize="11" Foreground="#4B5563" Margin="0,0,0,6" HorizontalAlignment="Center"/>
+                                                <Border Height="60" Classes="stat-card" BorderBrush="#FEF08A">
+                                                    <Border.Background><LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%"><GradientStop Color="#FEF9C3" Offset="0"/><GradientStop Color="#FEF08A" Offset="1"/></LinearGradientBrush></Border.Background>
+                                                    <TextBlock Text="0" FontSize="22" FontWeight="Bold" Foreground="#CA8A04" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                </Border>
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="4">
+                                                <TextBlock Text="رخصة ادارية" FontSize="11" Foreground="#4B5563" Margin="0,0,0,6" HorizontalAlignment="Center"/>
+                                                <Border Height="60" Classes="stat-card" BorderBrush="#C7D2FE">
+                                                    <Border.Background><LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%"><GradientStop Color="#E0E7FF" Offset="0"/><GradientStop Color="#C7D2FE" Offset="1"/></LinearGradientBrush></Border.Background>
+                                                    <TextBlock Text="0" FontSize="22" FontWeight="Bold" Foreground="#4F46E5" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                </Border>
+                                            </StackPanel>
+                                        </Grid>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+
+                    </Grid>
+
+                    <!-- ── DATE ── -->
+                    <Border Classes="card" Padding="20,14" HorizontalAlignment="Center">
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <Path Data="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                  Stroke="#7C3AED" StrokeThickness="2" Width="22" Height="22"/>
+                            <TextBlock Text="{Binding TodayDate}" FontWeight="Bold" FontSize="18"/>
+                        </StackPanel>
+                    </Border>
+
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+
+    </Grid>
 </Window>
