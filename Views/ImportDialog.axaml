@@ -1,0 +1,173 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:MyAvaloniaApp.ViewModels"
+        x:Class="MyAvaloniaApp.Views.ImportDialog"
+        x:DataType="vm:ImportDialogViewModel"
+        Title="استيراد قاعدة المعطيات"
+        Width="520" Height="420"
+        FlowDirection="RightToLeft"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False">
+
+    <Window.Styles>
+        <Style Selector="TextBlock">
+            <Setter Property="FontFamily" Value="Cairo,Tajawal,Segoe UI"/>
+            <Setter Property="Foreground" Value="#1E293B"/>
+        </Style>
+        <Style Selector="Button.primary">
+            <Setter Property="Background">
+                <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+                    <GradientStop Color="#4F46E5" Offset="0"/>
+                    <GradientStop Color="#7C3AED" Offset="1"/>
+                </LinearGradientBrush>
+            </Setter>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Padding" Value="24,12"/>
+            <Setter Property="CornerRadius" Value="10"/>
+            <Setter Property="FontFamily" Value="Cairo,Tajawal,Segoe UI"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+        <Style Selector="Button.primary:disabled /template/ ContentPresenter">
+            <Setter Property="Background" Value="#CBD5E1"/>
+        </Style>
+        <Style Selector="Button.secondary">
+            <Setter Property="Background" Value="#F1F5F9"/>
+            <Setter Property="Foreground" Value="#475569"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Padding" Value="24,12"/>
+            <Setter Property="CornerRadius" Value="10"/>
+            <Setter Property="FontFamily" Value="Cairo,Tajawal,Segoe UI"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+    </Window.Styles>
+
+    <Border Background="#F8FAFC" Padding="32">
+        <StackPanel Spacing="24">
+
+            <!-- Header -->
+            <StackPanel Spacing="6">
+                <StackPanel Orientation="Horizontal" Spacing="12">
+                    <Border Width="44" Height="44" CornerRadius="12">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                                <GradientStop Color="#6366F1" Offset="0"/>
+                                <GradientStop Color="#4F46E5" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <Path Data="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                              Stroke="White" StrokeThickness="2" Stretch="Uniform" Margin="10"/>
+                    </Border>
+                    <StackPanel VerticalAlignment="Center" Spacing="2">
+                        <TextBlock Text="استيراد قاعدة المعطيات" FontSize="20" FontWeight="Bold"/>
+                        <TextBlock Text="اختر ملف XML لاستيراد بيانات الموظفين" FontSize="13" Foreground="#64748B"/>
+                    </StackPanel>
+                </StackPanel>
+                <Border Height="1" Background="#E2E8F0" Margin="0,8,0,0"/>
+            </StackPanel>
+
+            <!-- File picker -->
+            <StackPanel Spacing="8">
+                <TextBlock Text="ملف البيانات (XML)" FontWeight="SemiBold" FontSize="14"/>
+                <Grid ColumnDefinitions="*,12,Auto">
+                    <Border Grid.Column="0"
+                            Background="White" CornerRadius="10"
+                            BorderThickness="1.5" BorderBrush="#CBD5E1"
+                            Padding="12,10">
+                        <TextBlock Text="{Binding FilePath}"
+                                   Foreground="#1E293B"
+                                   TextTrimming="CharacterEllipsis"
+                                   VerticalAlignment="Center" FontSize="13"/>
+                    </Border>
+                    <Button Grid.Column="2"
+                            Classes="primary"
+                            Content="تصفح..."
+                            x:Name="BrowseButton"
+                            IsEnabled="{Binding !IsImporting}"/>
+                </Grid>
+            </StackPanel>
+
+            <!-- Progress / status area — normal border -->
+            <Border IsVisible="{Binding !HasError}"
+                    Background="White" CornerRadius="12"
+                    BorderThickness="1.5" BorderBrush="#E2E8F0" Padding="20">
+                <StackPanel Spacing="12">
+
+                    <!-- Loading -->
+                    <StackPanel IsVisible="{Binding IsImporting}"
+                                Orientation="Horizontal" Spacing="12"
+                                HorizontalAlignment="Center">
+                        <TextBlock Text="⏳" FontSize="18" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding StatusMessage}" VerticalAlignment="Center" FontSize="14"/>
+                    </StackPanel>
+
+                    <!-- Idle hint -->
+                    <TextBlock IsVisible="{Binding !IsDone}"
+                               Text="اختر ملف XML ثم اضغط &quot;استيراد&quot; للبدء"
+                               Foreground="#94A3B8" FontSize="13"
+                               HorizontalAlignment="Center"/>
+
+                    <!-- Success summary -->
+                    <StackPanel IsVisible="{Binding IsDone}">
+                        <TextBlock Text="{Binding StatusMessage}"
+                                   FontWeight="Bold" FontSize="15"
+                                   Foreground="#059669"
+                                   HorizontalAlignment="Center"
+                                   Margin="0,0,0,12"/>
+                        <Grid ColumnDefinitions="*,*,*">
+                            <Border Grid.Column="0" Background="#D1FAE5" CornerRadius="8" Padding="12,8" Margin="0,0,6,0">
+                                <StackPanel HorizontalAlignment="Center">
+                                    <TextBlock Text="{Binding InsertedCount}" FontSize="24" FontWeight="Bold"
+                                               Foreground="#059669" HorizontalAlignment="Center"/>
+                                    <TextBlock Text="مضاف جديد" FontSize="11" Foreground="#065F46" HorizontalAlignment="Center"/>
+                                </StackPanel>
+                            </Border>
+                            <Border Grid.Column="1" Background="#DBEAFE" CornerRadius="8" Padding="12,8" Margin="6,0,6,0">
+                                <StackPanel HorizontalAlignment="Center">
+                                    <TextBlock Text="{Binding UpdatedCount}" FontSize="24" FontWeight="Bold"
+                                               Foreground="#2563EB" HorizontalAlignment="Center"/>
+                                    <TextBlock Text="محدّث" FontSize="11" Foreground="#1E40AF" HorizontalAlignment="Center"/>
+                                </StackPanel>
+                            </Border>
+                            <Border Grid.Column="2" Background="#FEF9C3" CornerRadius="8" Padding="12,8" Margin="6,0,0,0">
+                                <StackPanel HorizontalAlignment="Center">
+                                    <TextBlock Text="{Binding SkippedCount}" FontSize="24" FontWeight="Bold"
+                                               Foreground="#CA8A04" HorizontalAlignment="Center"/>
+                                    <TextBlock Text="محذوف" FontSize="11" Foreground="#92400E" HorizontalAlignment="Center"/>
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+                    </StackPanel>
+
+                </StackPanel>
+            </Border>
+
+            <!-- Error border — only visible when HasError is true -->
+            <Border IsVisible="{Binding HasError}"
+                    Background="White" CornerRadius="12"
+                    BorderThickness="1.5" BorderBrush="#FCA5A5" Padding="20">
+                <TextBlock Text="{Binding StatusMessage}"
+                           FontWeight="Bold" FontSize="14"
+                           Foreground="#DC2626"
+                           TextWrapping="Wrap"
+                           HorizontalAlignment="Center"/>
+            </Border>
+
+            <!-- Action buttons -->
+            <Grid ColumnDefinitions="*,12,*">
+                <Button Grid.Column="0"
+                        Classes="secondary"
+                        Content="إغلاق"
+                        HorizontalAlignment="Stretch"
+                        x:Name="CloseButton"/>
+                <Button Grid.Column="2"
+                        Classes="primary"
+                        Content="استيراد"
+                        HorizontalAlignment="Stretch"
+                        IsEnabled="{Binding CanImport}"
+                        Command="{Binding RunImportCommand}"/>
+            </Grid>
+
+        </StackPanel>
+    </Border>
+</Window>

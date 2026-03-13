@@ -6,6 +6,9 @@ C:\Users\itzme\MyAvaloniaApp\obj\Debug\net10.0\MyAvaloniaApp.AssemblyInfoInputs.
 C:\Users\itzme\MyAvaloniaApp\obj\Debug\net10.0\MyAvaloniaApp.AssemblyInfo.cs
 C:\Users\itzme\MyAvaloniaApp\obj\Debug\net10.0\MyAvaloniaApp.csproj.CoreCompileInputs.cache
 C:\Users\itzme\MyAvaloniaApp\obj\Debug\net10.0\MyAvaloniaApp.sourcelink.json
+C:\Users\itzme\MyAvaloniaApp\obj\Debug\net10.0\MyAvaloniaApp.dll
+C:\Users\itzme\MyAvaloniaApp\obj\Debug\net10.0\refint\MyAvaloniaApp.dll
+C:\Users\itzme\MyAvaloniaApp\obj\Debug\net10.0\MyAvaloniaApp.pdb
 C:\Users\itzme\MyAvaloniaApp\bin\Debug\net10.0\MyAvaloniaApp.exe
 C:\Users\itzme\MyAvaloniaApp\bin\Debug\net10.0\MyAvaloniaApp.deps.json
 C:\Users\itzme\MyAvaloniaApp\bin\Debug\net10.0\MyAvaloniaApp.runtimeconfig.json
@@ -166,8 +169,5 @@ C:\Users\itzme\MyAvaloniaApp\bin\Debug\net10.0\runtimes\win-arm64\native\libSkia
 C:\Users\itzme\MyAvaloniaApp\bin\Debug\net10.0\runtimes\win-x64\native\libSkiaSharp.dll
 C:\Users\itzme\MyAvaloniaApp\bin\Debug\net10.0\runtimes\win-x86\native\libSkiaSharp.dll
 C:\Users\itzme\MyAvaloniaApp\obj\Debug\net10.0\MyAvalon.9DF80BA1.Up2Date
-C:\Users\itzme\MyAvaloniaApp\obj\Debug\net10.0\MyAvaloniaApp.dll
-C:\Users\itzme\MyAvaloniaApp\obj\Debug\net10.0\refint\MyAvaloniaApp.dll
-C:\Users\itzme\MyAvaloniaApp\obj\Debug\net10.0\MyAvaloniaApp.pdb
 C:\Users\itzme\MyAvaloniaApp\obj\Debug\net10.0\MyAvaloniaApp.genruntimeconfig.cache
 C:\Users\itzme\MyAvaloniaApp\obj\Debug\net10.0\ref\MyAvaloniaApp.dll
