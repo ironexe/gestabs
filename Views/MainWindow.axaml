@@ -241,7 +241,7 @@
                         </Button>
 
                         <!-- 2: مسك الغياب -->
-                        <Button Classes="menu-btn" Margin="8,0,8,0">
+                        <Button Classes="menu-btn" Margin="8,0,8,0" Command="{Binding OpenAbsenceDialogCommand}">
                             <Grid RowDefinitions="*,4">
                                 <StackPanel Grid.Row="0" Spacing="12" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="12">
                                     <Border Width="56" Height="56" CornerRadius="14">

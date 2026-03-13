@@ -34,6 +34,9 @@ build_property.EnableCodeStyleSeverity =
 [C:/Users/itzme/MyAvaloniaApp/App.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
+[C:/Users/itzme/MyAvaloniaApp/Views/AbsenceDialog.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
 [C:/Users/itzme/MyAvaloniaApp/Views/ImportDialog.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 

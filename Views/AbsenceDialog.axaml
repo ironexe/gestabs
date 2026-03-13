@@ -1,0 +1,344 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:MyAvaloniaApp.ViewModels"
+        xmlns:models="using:MyAvaloniaApp.Models"
+        x:Class="MyAvaloniaApp.Views.AbsenceDialog"
+        x:DataType="vm:AbsenceDialogViewModel"
+        Title="مسك الغياب"
+        Width="980" Height="680"
+        FlowDirection="RightToLeft"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False">
+
+    <Window.Styles>
+        <Style Selector="TextBlock">
+            <Setter Property="FontFamily" Value="Cairo,Tajawal,Segoe UI"/>
+            <Setter Property="Foreground" Value="#1E293B"/>
+        </Style>
+        <Style Selector="TextBox, ComboBox">
+            <Setter Property="FontFamily" Value="Cairo,Tajawal,Segoe UI"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="BorderBrush" Value="#CBD5E1"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Padding" Value="10,8"/>
+        </Style>
+        <Style Selector="Button.primary">
+            <Setter Property="FontFamily" Value="Cairo,Tajawal,Segoe UI"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="20,10"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Background">
+                <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+                    <GradientStop Color="#4F46E5" Offset="0"/>
+                    <GradientStop Color="#7C3AED" Offset="1"/>
+                </LinearGradientBrush>
+            </Setter>
+        </Style>
+        <Style Selector="Button.primary:disabled /template/ ContentPresenter">
+            <Setter Property="Background" Value="#CBD5E1"/>
+        </Style>
+        <Style Selector="Button.danger">
+            <Setter Property="FontFamily" Value="Cairo,Tajawal,Segoe UI"/>
+            <Setter Property="Background" Value="#FEE2E2"/>
+            <Setter Property="Foreground" Value="#DC2626"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+        <Style Selector="Button.edit-btn">
+            <Setter Property="FontFamily" Value="Cairo,Tajawal,Segoe UI"/>
+            <Setter Property="Background" Value="#EEF2FF"/>
+            <Setter Property="Foreground" Value="#4F46E5"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+        <Style Selector="Border.card">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="CornerRadius" Value="12"/>
+            <Setter Property="BoxShadow" Value="0 2 8 0 #10000000"/>
+        </Style>
+        <Style Selector="Border.section-header">
+            <Setter Property="CornerRadius" Value="12,12,0,0"/>
+            <Setter Property="Padding" Value="16,12"/>
+        </Style>
+        <Style Selector="TextBlock.label">
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="#475569"/>
+            <Setter Property="Margin" Value="0,0,0,4"/>
+        </Style>
+    </Window.Styles>
+
+    <Border>
+        <Border.Background>
+            <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                <GradientStop Color="#F8FAFC" Offset="0"/>
+                <GradientStop Color="#EEF2FF" Offset="1"/>
+            </LinearGradientBrush>
+        </Border.Background>
+
+        <Grid Margin="20" ColumnDefinitions="380,20,*">
+
+            <!-- ═══ LEFT PANEL ═══ -->
+            <StackPanel Grid.Column="0" Spacing="16">
+
+                <!-- Employee selector card -->
+                <Border Classes="card">
+                    <StackPanel>
+                        <Border Classes="section-header">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+                                    <GradientStop Color="#4F46E5" Offset="0"/>
+                                    <GradientStop Color="#7C3AED" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Border.Background>
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <Path Data="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                                      Stroke="White" StrokeThickness="1.5" Width="18" Height="18"/>
+                                <TextBlock Text="اختيار الموظف" Foreground="White" FontWeight="Bold" FontSize="14"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Padding="16">
+                            <StackPanel Spacing="6">
+                                <TextBlock Classes="label" Text="الموظف"/>
+                                <ComboBox ItemsSource="{Binding PersonnelList}"
+                                          SelectedItem="{Binding SelectedPersonnel}"
+                                          HorizontalAlignment="Stretch"
+                                          PlaceholderText="-- اختر موظفاً --">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate x:DataType="models:Personnel">
+                                            <StackPanel Spacing="2">
+                                                <TextBlock FontWeight="Bold" FontSize="13">
+                                                    <TextBlock.Text>
+                                                        <MultiBinding StringFormat="{}{0} {1}">
+                                                            <Binding Path="NomLatin"/>
+                                                            <Binding Path="PrenomLatin"/>
+                                                        </MultiBinding>
+                                                    </TextBlock.Text>
+                                                </TextBlock>
+                                                <TextBlock FontSize="11" Foreground="#64748B">
+                                                    <TextBlock.Text>
+                                                        <MultiBinding StringFormat="{}{0} {1}">
+                                                            <Binding Path="NomArabe"/>
+                                                            <Binding Path="PrenomArabe"/>
+                                                        </MultiBinding>
+                                                    </TextBlock.Text>
+                                                </TextBlock>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </Border>
+
+                <!-- Absence form card -->
+                <Border Classes="card" IsVisible="{Binding HasSelectedPersonnel}">
+                    <StackPanel>
+                        <Border Classes="section-header">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+                                    <GradientStop Color="#F97316" Offset="0"/>
+                                    <GradientStop Color="#EA580C" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Border.Background>
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <Path Data="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                      Stroke="White" StrokeThickness="1.5" Width="18" Height="18"/>
+                                <TextBlock Text="{Binding SubmitLabel}" Foreground="White" FontWeight="Bold" FontSize="14"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Padding="16">
+                            <StackPanel Spacing="12">
+
+                                <!-- Date -->
+                                <StackPanel Spacing="4">
+                                    <TextBlock Classes="label" Text="تاريخ الغياب"/>
+                                    <CalendarDatePicker SelectedDate="{Binding AbsenceDate}"
+                                                        HorizontalAlignment="Stretch"
+                                                        IsTodayHighlighted="True"/>
+                                </StackPanel>
+
+                                <!-- Hours -->
+                                <StackPanel Spacing="4">
+                                    <TextBlock Classes="label" Text="عدد الساعات"/>
+                                    <TextBox Text="{Binding HoursText}" Watermark="مثال: 2 أو 1.5"/>
+                                </StackPanel>
+
+                                <!-- Absence type -->
+                                <StackPanel Spacing="4">
+                                    <TextBlock Classes="label" Text="نوع الغياب"/>
+                                    <ComboBox ItemsSource="{Binding AbsenceTypes}"
+                                              SelectedItem="{Binding SelectedAbsenceType}"
+                                              HorizontalAlignment="Stretch"/>
+                                </StackPanel>
+
+                                <!-- Notes -->
+                                <StackPanel Spacing="4">
+                                    <TextBlock Classes="label" Text="ملاحظات (اختياري)"/>
+                                    <TextBox Text="{Binding Notes}"
+                                             Watermark="أي ملاحظات إضافية..."
+                                             AcceptsReturn="True"
+                                             Height="60"/>
+                                </StackPanel>
+
+                                <!-- Status: success -->
+                                <Border IsVisible="{Binding IsSuccess}"
+                                        Background="#D1FAE5" CornerRadius="8" Padding="10,8">
+                                    <TextBlock Text="{Binding StatusMessage}"
+                                               Foreground="#065F46"
+                                               FontWeight="SemiBold" FontSize="13"
+                                               HorizontalAlignment="Center"/>
+                                </Border>
+
+                                <!-- Status: error -->
+                                <Border IsVisible="{Binding !IsSuccess}"
+                                        Background="#FEE2E2" CornerRadius="8" Padding="10,8">
+                                    <TextBlock Text="{Binding StatusMessage}"
+                                               IsVisible="{Binding StatusMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                               Foreground="#991B1B"
+                                               FontWeight="SemiBold" FontSize="13"
+                                               HorizontalAlignment="Center"/>
+                                </Border>
+
+                                <!-- Buttons -->
+                                <Grid ColumnDefinitions="*,8,Auto">
+                                    <Button Grid.Column="0"
+                                            Classes="primary"
+                                            Content="{Binding SubmitLabel}"
+                                            HorizontalAlignment="Stretch"
+                                            IsEnabled="{Binding !IsBusy}"
+                                            Command="{Binding SubmitCommand}"/>
+                                    <Button Grid.Column="2"
+                                            IsVisible="{Binding IsEditMode}"
+                                            Content="إلغاء"
+                                            Padding="14,10"
+                                            CornerRadius="8"
+                                            Command="{Binding CancelEditCommand}"/>
+                                </Grid>
+
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </Border>
+
+            </StackPanel>
+            <!-- END LEFT PANEL -->
+
+            <!-- ═══ RIGHT PANEL ═══ -->
+            <Border Grid.Column="2" Classes="card">
+                <StackPanel>
+                    <Border Classes="section-header">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+                                <GradientStop Color="#8B5CF6" Offset="0"/>
+                                <GradientStop Color="#EC4899" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <Path Data="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                                  Stroke="White" StrokeThickness="1.5" Width="18" Height="18"/>
+                            <TextBlock Text="سجل الغيابات" Foreground="White" FontWeight="Bold" FontSize="14"/>
+                            <Border Background="#33FFFFFF" CornerRadius="10" Padding="8,2"
+                                    IsVisible="{Binding HasSelectedPersonnel}">
+                                <TextBlock Text="{Binding AbsenceHistory.Count}"
+                                           Foreground="White" FontWeight="Bold" FontSize="12"/>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Empty state: no employee selected -->
+                    <StackPanel IsVisible="{Binding !HasSelectedPersonnel}"
+                                Spacing="8" Margin="0,60,0,0">
+                        <TextBlock Text="👤" FontSize="40" HorizontalAlignment="Center"/>
+                        <TextBlock Text="اختر موظفاً لعرض سجل غياباته"
+                                   Foreground="#94A3B8" FontSize="13"
+                                   HorizontalAlignment="Center"/>
+                    </StackPanel>
+
+                    <!-- Loading -->
+                    <TextBlock IsVisible="{Binding IsLoadingHistory}"
+                               Text="جاري التحميل..." Foreground="#94A3B8"
+                               HorizontalAlignment="Center" Margin="0,20,0,0"/>
+
+                    <!-- History -->
+                    <StackPanel IsVisible="{Binding HasSelectedPersonnel}">
+
+                        <!-- No records -->
+                        <StackPanel IsVisible="{Binding AbsenceHistory.Count,
+                                               Converter={x:Static ObjectConverters.IsNull}}"
+                                    Spacing="8" Margin="0,40,0,0">
+                            <TextBlock Text="✅" FontSize="36" HorizontalAlignment="Center"/>
+                            <TextBlock Text="لا توجد غيابات مسجلة"
+                                       Foreground="#94A3B8" FontSize="13"
+                                       HorizontalAlignment="Center"/>
+                        </StackPanel>
+
+                        <!-- Records list -->
+                        <ScrollViewer MaxHeight="520">
+                            <Border Padding="16,8">
+                                <ItemsControl ItemsSource="{Binding AbsenceHistory}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate x:DataType="models:Absence">
+                                            <Border Background="White" CornerRadius="10"
+                                                    BorderThickness="1" BorderBrush="#E2E8F0"
+                                                    Padding="14,10" Margin="0,0,0,8">
+                                                <Grid ColumnDefinitions="*,Auto">
+                                                    <StackPanel Grid.Column="0" Spacing="4">
+                                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                                            <TextBlock Text="{Binding AbsenceDate, StringFormat='{}{0:dd/MM/yyyy}'}"
+                                                                       FontWeight="Bold" FontSize="14"/>
+                                                            <Border Background="#EEF2FF" CornerRadius="6" Padding="6,2">
+                                                                <TextBlock FontSize="12" Foreground="#4F46E5" FontWeight="Bold">
+                                                                    <TextBlock.Text>
+                                                                        <MultiBinding StringFormat="{}{0}س">
+                                                                            <Binding Path="Hours"/>
+                                                                        </MultiBinding>
+                                                                    </TextBlock.Text>
+                                                                </TextBlock>
+                                                            </Border>
+                                                        </StackPanel>
+                                                        <Border Background="#FEF3C7" CornerRadius="6"
+                                                                Padding="6,2" HorizontalAlignment="Left">
+                                                            <TextBlock Text="{Binding AbsenceType}"
+                                                                       FontSize="11" Foreground="#92400E"/>
+                                                        </Border>
+                                                        <TextBlock Text="{Binding Notes}"
+                                                                   IsVisible="{Binding Notes, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                                                   FontSize="11" Foreground="#64748B"
+                                                                   TextWrapping="Wrap"/>
+                                                    </StackPanel>
+                                                    <StackPanel Grid.Column="1" Orientation="Horizontal"
+                                                                Spacing="6" VerticalAlignment="Center">
+                                                        <Button Classes="edit-btn"
+                                                                Content="تعديل"
+                                                                FontSize="12"
+                                                                Command="{Binding $parent[Window].((vm:AbsenceDialogViewModel)DataContext).EditAbsenceCommand}"
+                                                                CommandParameter="{Binding}"/>
+                                                        <Button Classes="danger"
+                                                                Content="حذف"
+                                                                FontSize="12"
+                                                                Command="{Binding $parent[Window].((vm:AbsenceDialogViewModel)DataContext).DeleteAbsenceCommand}"
+                                                                CommandParameter="{Binding}"/>
+                                                    </StackPanel>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </Border>
+                        </ScrollViewer>
+
+                    </StackPanel>
+
+                </StackPanel>
+            </Border>
+            <!-- END RIGHT PANEL -->
+
+        </Grid>
+    </Border>
+</Window>

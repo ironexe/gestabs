@@ -18,6 +18,12 @@ public partial class MainWindow : Window
                     var dialog = new ImportDialog();
                     dialog.ShowDialog(this);
                 };
+
+                vm.OpenAbsenceDialogRequested += () =>
+                {
+                    var dialog = new AbsenceDialog();
+                    dialog.ShowDialog(this);
+                };
             }
         };
     }
