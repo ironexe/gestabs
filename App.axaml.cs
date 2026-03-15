@@ -1,9 +1,7 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Data.Core;
-using Avalonia.Data.Core.Plugins;
-using System.Linq;
 using Avalonia.Markup.Xaml;
+using MyAvaloniaApp.Services;
 using MyAvaloniaApp.ViewModels;
 using MyAvaloniaApp.Views;
 
@@ -20,28 +18,29 @@ public partial class App : Application
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            // Avoid duplicate validations from both Avalonia and the CommunityToolkit. 
-            // More info: https://docs.avaloniaui.net/docs/guides/development-guides/data-validation#manage-validationplugins
-            DisableAvaloniaDataAnnotationValidation();
-            desktop.MainWindow = new MainWindow
+            // Always show main window first
+            var mainWindow = new MainWindow
             {
-                DataContext = new MainWindowViewModel(),
+                DataContext = new MainWindowViewModel()
             };
+            desktop.MainWindow = mainWindow;
+
+            // Then check if first run and show wizard on top
+            _ = CheckFirstRunAsync(mainWindow);
         }
 
         base.OnFrameworkInitializationCompleted();
     }
 
-    private void DisableAvaloniaDataAnnotationValidation()
+    private static async System.Threading.Tasks.Task CheckFirstRunAsync(MainWindow mainWindow)
     {
-        // Get an array of plugins to remove
-        var dataValidationPluginsToRemove =
-            BindingPlugins.DataValidators.OfType<DataAnnotationsValidationPlugin>().ToArray();
+        var settingsService = new SettingsService();
+        var isFirstRun      = await settingsService.IsFirstRunAsync();
 
-        // remove each entry found
-        foreach (var plugin in dataValidationPluginsToRemove)
+        if (isFirstRun)
         {
-            BindingPlugins.DataValidators.Remove(plugin);
+            var wizard = new SetupWizard();
+            await wizard.ShowDialog(mainWindow);
         }
     }
 }

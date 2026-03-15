@@ -45,6 +45,7 @@ public partial class AbsenceDialogViewModel : ViewModelBase
         "رخصة الحج",
         "رخصة بدون أجر",
         "رخصة أمومة",
+        "إضراب",
     };
 
     // ── Absence history ───────────────────────────────────────────────────────

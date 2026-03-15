@@ -5,9 +5,10 @@ namespace MyAvaloniaApp.Data;
 
 public class AppDbContext : DbContext
 {
-    public DbSet<Personnel> Personnel => Set<Personnel>();
-    public DbSet<Activite>  Activites => Set<Activite>();
-    public DbSet<Absence>   Absences  => Set<Absence>();
+    public DbSet<Personnel>   Personnel   => Set<Personnel>();
+    public DbSet<Activite>    Activites   => Set<Activite>();
+    public DbSet<Absence>     Absences    => Set<Absence>();
+    public DbSet<AppSettings> AppSettings => Set<AppSettings>();
 
     protected override void OnConfiguring(DbContextOptionsBuilder options)
     {
@@ -39,5 +40,11 @@ public class AppDbContext : DbContext
             .WithMany()
             .HasForeignKey(a => a.Ppr)
             .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<AppSettings>()
+            .HasKey(s => s.Id);
+        modelBuilder.Entity<AppSettings>()
+            .Property(s => s.Id)
+            .ValueGeneratedNever();
     }
 }

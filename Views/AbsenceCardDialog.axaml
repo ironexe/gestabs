@@ -1,0 +1,212 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:MyAvaloniaApp.ViewModels"
+        xmlns:models="using:MyAvaloniaApp.Models"
+        x:Class="MyAvaloniaApp.Views.AbsenceCardDialog"
+        x:DataType="vm:AbsenceCardDialogViewModel"
+        Title="بطاقة الغياب"
+        Width="540" Height="480"
+        FlowDirection="RightToLeft"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False">
+
+    <Window.Styles>
+        <Style Selector="TextBlock">
+            <Setter Property="FontFamily" Value="Cairo,Tajawal,Segoe UI"/>
+            <Setter Property="Foreground" Value="#1E293B"/>
+        </Style>
+        <Style Selector="ComboBox">
+            <Setter Property="FontFamily" Value="Cairo,Tajawal,Segoe UI"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="BorderBrush" Value="#CBD5E1"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Padding" Value="10,8"/>
+        </Style>
+        <Style Selector="Button.primary">
+            <Setter Property="FontFamily" Value="Cairo,Tajawal,Segoe UI"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="CornerRadius" Value="10"/>
+            <Setter Property="Padding" Value="24,12"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Background">
+                <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+                    <GradientStop Color="#EC4899" Offset="0"/>
+                    <GradientStop Color="#DB2777" Offset="1"/>
+                </LinearGradientBrush>
+            </Setter>
+        </Style>
+        <Style Selector="Button.primary:disabled /template/ ContentPresenter">
+            <Setter Property="Background" Value="#CBD5E1"/>
+        </Style>
+        <Style Selector="Button.secondary">
+            <Setter Property="FontFamily" Value="Cairo,Tajawal,Segoe UI"/>
+            <Setter Property="Background" Value="#F1F5F9"/>
+            <Setter Property="Foreground" Value="#475569"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="CornerRadius" Value="10"/>
+            <Setter Property="Padding" Value="24,12"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+        <Style Selector="Border.card">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="CornerRadius" Value="12"/>
+            <Setter Property="BoxShadow" Value="0 2 8 0 #10000000"/>
+        </Style>
+        <Style Selector="TextBlock.label">
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="#475569"/>
+            <Setter Property="Margin" Value="0,0,0,4"/>
+        </Style>
+    </Window.Styles>
+
+    <Border Background="#F8FAFC" Padding="28">
+        <StackPanel Spacing="20">
+
+            <!-- Header -->
+            <StackPanel Spacing="6">
+                <StackPanel Orientation="Horizontal" Spacing="12">
+                    <Border Width="48" Height="48" CornerRadius="12">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                                <GradientStop Color="#EC4899" Offset="0"/>
+                                <GradientStop Color="#DB2777" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <Path Data="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c0 1.306.835 2.417 2 2.83V19h-2v1h6v-1h-2v-2.17A3.001 3.001 0 0015 14"
+                              Stroke="White" StrokeThickness="1.5" Stretch="Uniform" Margin="11"/>
+                    </Border>
+                    <StackPanel VerticalAlignment="Center" Spacing="2">
+                        <TextBlock Text="بطاقة الغياب السنوية" FontSize="20" FontWeight="Bold"/>
+                        <TextBlock Text="اختر موظفاً لتوليد بطاقة غيابه السنوية بصيغة PDF"
+                                   FontSize="12" Foreground="#64748B"/>
+                    </StackPanel>
+                </StackPanel>
+                <Border Height="1" Background="#E2E8F0" Margin="0,8,0,0"/>
+            </StackPanel>
+
+            <!-- Employee selector -->
+            <Border Classes="card">
+                <StackPanel>
+                    <Border CornerRadius="12,12,0,0" Padding="16,12">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+                                <GradientStop Color="#EC4899" Offset="0"/>
+                                <GradientStop Color="#DB2777" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <Path Data="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                                  Stroke="White" StrokeThickness="1.5" Width="16" Height="16"/>
+                            <TextBlock Text="اختيار الموظف" Foreground="White" FontWeight="Bold" FontSize="13"/>
+                        </StackPanel>
+                    </Border>
+                    <Border Padding="16">
+                        <StackPanel Spacing="6">
+                            <TextBlock Classes="label" Text="الموظف"/>
+                            <ComboBox ItemsSource="{Binding PersonnelList}"
+                                      SelectedItem="{Binding SelectedPersonnel}"
+                                      HorizontalAlignment="Stretch"
+                                      PlaceholderText="-- اختر موظفاً --">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate x:DataType="models:Personnel">
+                                        <StackPanel Spacing="1">
+                                            <TextBlock FontWeight="Bold" FontSize="13">
+                                                <TextBlock.Text>
+                                                    <MultiBinding StringFormat="{}{0} {1}">
+                                                        <Binding Path="NomLatin"/>
+                                                        <Binding Path="PrenomLatin"/>
+                                                    </MultiBinding>
+                                                </TextBlock.Text>
+                                            </TextBlock>
+                                            <TextBlock FontSize="11" Foreground="#64748B">
+                                                <TextBlock.Text>
+                                                    <MultiBinding StringFormat="{}{0} {1}">
+                                                        <Binding Path="NomArabe"/>
+                                                        <Binding Path="PrenomArabe"/>
+                                                    </MultiBinding>
+                                                </TextBlock.Text>
+                                            </TextBlock>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Border>
+
+            <!-- Color legend -->
+            <Border Classes="card">
+                <Border Padding="14">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="دلالة الألوان" FontWeight="Bold" FontSize="13"/>
+                        <WrapPanel>
+                            <Border Background="#FDE68A" CornerRadius="6" Padding="8,4" Margin="0,0,6,6">
+                                <TextBlock Text="غياب بدون مبرر" FontSize="11"/>
+                            </Border>
+                            <Border Background="#BBF7D0" CornerRadius="6" Padding="8,4" Margin="0,0,6,6">
+                                <TextBlock Text="رخصة مرض" FontSize="11"/>
+                            </Border>
+                            <Border Background="#BFDBFE" CornerRadius="6" Padding="8,4" Margin="0,0,6,6">
+                                <TextBlock Text="رخصة إدارية" FontSize="11"/>
+                            </Border>
+                            <Border Background="#DDD6FE" CornerRadius="6" Padding="8,4" Margin="0,0,6,6">
+                                <TextBlock Text="رخصة الحج" FontSize="11"/>
+                            </Border>
+                            <Border Background="#FED7AA" CornerRadius="6" Padding="8,4" Margin="0,0,6,6">
+                                <TextBlock Text="رخصة بدون أجر" FontSize="11"/>
+                            </Border>
+                            <Border Background="#FBCFE8" CornerRadius="6" Padding="8,4" Margin="0,0,6,6">
+                                <TextBlock Text="رخصة أمومة" FontSize="11"/>
+                            </Border>
+                            <Border Background="#FECACA" CornerRadius="6" Padding="8,4" Margin="0,0,6,6">
+                                <TextBlock Text="إضراب" FontSize="11"/>
+                            </Border>
+                        </WrapPanel>
+                    </StackPanel>
+                </Border>
+            </Border>
+
+            <!-- Status: success -->
+            <Border IsVisible="{Binding IsSuccess}"
+                    Background="#D1FAE5" CornerRadius="10" Padding="14,10">
+                <StackPanel Spacing="4">
+                    <TextBlock Text="{Binding StatusMessage}"
+                               Foreground="#065F46" FontWeight="Bold" FontSize="13"
+                               HorizontalAlignment="Center"/>
+                    <TextBlock Text="{Binding OutputPath}"
+                               Foreground="#047857" FontSize="11"
+                               HorizontalAlignment="Center"
+                               TextWrapping="Wrap"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Status: error -->
+            <Border IsVisible="{Binding !IsSuccess}"
+                    Background="#FEE2E2" CornerRadius="10" Padding="14,10">
+                <TextBlock Text="{Binding StatusMessage}"
+                           IsVisible="{Binding StatusMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                           Foreground="#991B1B" FontWeight="Bold" FontSize="13"
+                           HorizontalAlignment="Center"/>
+            </Border>
+
+            <!-- Buttons -->
+            <Grid ColumnDefinitions="*,12,*">
+                <Button Grid.Column="0"
+                        Classes="secondary"
+                        Content="إغلاق"
+                        HorizontalAlignment="Stretch"
+                        x:Name="CloseButton"/>
+                <Button Grid.Column="2"
+                        Classes="primary"
+                        Content="توليد PDF"
+                        HorizontalAlignment="Stretch"
+                        IsEnabled="{Binding !IsBusy}"
+                        Command="{Binding GenerateCommand}"/>
+            </Grid>
+
+        </StackPanel>
+    </Border>
+</Window>

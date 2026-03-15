@@ -1,0 +1,141 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:MyAvaloniaApp.ViewModels"
+        x:Class="MyAvaloniaApp.Views.SetupWizard"
+        x:DataType="vm:SetupWizardViewModel"
+        Title="إعداد التطبيق"
+        Width="560" Height="700"
+        FlowDirection="RightToLeft"
+        WindowStartupLocation="CenterScreen"
+        CanResize="False">
+
+    <Window.Styles>
+        <Style Selector="TextBlock">
+            <Setter Property="FontFamily" Value="Cairo,Tajawal,Segoe UI"/>
+            <Setter Property="Foreground" Value="#1E293B"/>
+        </Style>
+        <Style Selector="TextBox">
+            <Setter Property="FontFamily" Value="Cairo,Tajawal,Segoe UI"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="BorderBrush" Value="#CBD5E1"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Padding" Value="12,10"/>
+            <Setter Property="FontSize" Value="13"/>
+        </Style>
+        <Style Selector="Button.primary">
+            <Setter Property="FontFamily" Value="Cairo,Tajawal,Segoe UI"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="CornerRadius" Value="10"/>
+            <Setter Property="Padding" Value="24,14"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Background">
+                <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+                    <GradientStop Color="#4F46E5" Offset="0"/>
+                    <GradientStop Color="#7C3AED" Offset="1"/>
+                </LinearGradientBrush>
+            </Setter>
+        </Style>
+        <Style Selector="Button.primary:disabled /template/ ContentPresenter">
+            <Setter Property="Background" Value="#CBD5E1"/>
+        </Style>
+        <Style Selector="TextBlock.label">
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="#475569"/>
+            <Setter Property="Margin" Value="0,0,0,5"/>
+        </Style>
+    </Window.Styles>
+
+    <Border>
+        <Border.Background>
+            <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                <GradientStop Color="#F8FAFC" Offset="0"/>
+                <GradientStop Color="#EEF2FF" Offset="1"/>
+            </LinearGradientBrush>
+        </Border.Background>
+
+        <Grid RowDefinitions="Auto,*,Auto" Margin="36,28,36,28">
+
+            <!-- Header -->
+            <StackPanel Grid.Row="0" Spacing="8" HorizontalAlignment="Center" Margin="0,0,0,16">
+                <Border Width="64" Height="64" CornerRadius="18" HorizontalAlignment="Center">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                            <GradientStop Color="#4F46E5" Offset="0"/>
+                            <GradientStop Color="#7C3AED" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <Path Data="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                          Stroke="White" StrokeThickness="1.5" Stretch="Uniform" Margin="14"/>
+                </Border>
+                <TextBlock Text="مرحباً بك في تدبير الموارد البشرية"
+                           FontSize="18" FontWeight="Bold" HorizontalAlignment="Center"/>
+                <TextBlock Text="يرجى إدخال معلومات المؤسسة قبل البدء"
+                           FontSize="12" Foreground="#64748B" HorizontalAlignment="Center"/>
+                <Border Height="1" Background="#E2E8F0" Margin="0,4,0,0"/>
+            </StackPanel>
+
+            <!-- Scrollable form fields -->
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                <StackPanel Spacing="14">
+
+                    <StackPanel Spacing="5">
+                        <TextBlock Classes="label" Text="اسم المؤسسة *"/>
+                        <TextBox Text="{Binding InstitutionName}"
+                                 Watermark="مثال: ثانوية الإمام الجزولي الاعدادية"/>
+                    </StackPanel>
+
+                    <StackPanel Spacing="5">
+                        <TextBlock Classes="label" Text="الأكاديمية *"/>
+                        <TextBox Text="{Binding AcademyName}"
+                                 Watermark="مثال: سوس ماسة"/>
+                    </StackPanel>
+
+                    <StackPanel Spacing="5">
+                        <TextBlock Classes="label" Text="المديرية الإقليمية *"/>
+                        <TextBox Text="{Binding RegionName}"
+                                 Watermark="مثال: انزكان ايت ملول"/>
+                    </StackPanel>
+
+                    <StackPanel Spacing="5">
+                        <TextBlock Classes="label" Text="الموسم الدراسي *"/>
+                        <TextBox Text="{Binding AcademicYear}"
+                                 Watermark="مثال: 2025/2026"/>
+                    </StackPanel>
+
+                    <StackPanel Spacing="5">
+                        <TextBlock Classes="label" Text="اسم المدير *"/>
+                        <TextBox Text="{Binding DirectorName}"
+                                 Watermark="الاسم الكامل للمدير"/>
+                    </StackPanel>
+
+                    <!-- Error -->
+                    <Border IsVisible="{Binding ErrorMessage,
+                                        Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                            Background="#FEE2E2" CornerRadius="8" Padding="12,8">
+                        <TextBlock Text="{Binding ErrorMessage}"
+                                   Foreground="#991B1B" FontSize="12"
+                                   HorizontalAlignment="Center"/>
+                    </Border>
+
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- Fixed bottom: button always visible -->
+            <StackPanel Grid.Row="2" Spacing="8" Margin="0,16,0,0">
+                <Border Height="1" Background="#E2E8F0"/>
+                <Button Classes="primary"
+                        Content="بدء الاستخدام"
+                        HorizontalAlignment="Stretch"
+                        IsEnabled="{Binding !IsBusy}"
+                        Command="{Binding SaveCommand}"/>
+                <TextBlock Text="* جميع الحقول إلزامية"
+                           FontSize="11" Foreground="#94A3B8"
+                           HorizontalAlignment="Center"/>
+            </StackPanel>
+
+        </Grid>
+    </Border>
+</Window>

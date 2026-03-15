@@ -24,6 +24,12 @@ public partial class MainWindow : Window
                     var dialog = new AbsenceDialog();
                     dialog.ShowDialog(this);
                 };
+
+                vm.OpenAbsenceCardDialogRequested += (institutionName, academicYear) =>
+                {
+                    var dialog = new AbsenceCardDialog(institutionName, academicYear);
+                    dialog.ShowDialog(this);
+                };
             }
         };
     }

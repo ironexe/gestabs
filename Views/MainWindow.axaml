@@ -129,7 +129,7 @@
                                     </Border>
                                     <StackPanel VerticalAlignment="Center" Spacing="1">
                                         <TextBlock Text="مرحباً" Foreground="#B3FFFFFF" FontSize="10"/>
-                                        <TextBlock Text="محمد ايت دحمانت" Foreground="White" FontWeight="Bold" FontSize="13"/>
+                                        <TextBlock Text="{Binding DirectorName}" Foreground="White" FontWeight="Bold" FontSize="13"/>
                                     </StackPanel>
                                 </StackPanel>
                             </Border>
@@ -179,25 +179,25 @@
                         <Border Grid.Column="0" Background="#20FFFFFF" CornerRadius="12" Padding="16,12" Margin="0,0,6,0">
                             <StackPanel>
                                 <TextBlock Text="الاكاديمية" Foreground="#B3FFFFFF" FontSize="11" Margin="0,0,0,4"/>
-                                <TextBlock Text="سوس ماسة" Foreground="White" FontWeight="Bold"/>
+                                <TextBlock Text="{Binding AcademyName}" Foreground="White" FontWeight="Bold"/>
                             </StackPanel>
                         </Border>
                         <Border Grid.Column="1" Background="#20FFFFFF" CornerRadius="12" Padding="16,12" Margin="6,0,6,0">
                             <StackPanel>
                                 <TextBlock Text="المديرية الاقليمية" Foreground="#B3FFFFFF" FontSize="11" Margin="0,0,0,4"/>
-                                <TextBlock Text="انزكان ايت ميلول" Foreground="White" FontWeight="Bold"/>
+                                <TextBlock Text="{Binding RegionName}" Foreground="White" FontWeight="Bold"/>
                             </StackPanel>
                         </Border>
                         <Border Grid.Column="2" Background="#20FFFFFF" CornerRadius="12" Padding="16,12" Margin="6,0,6,0">
                             <StackPanel>
                                 <TextBlock Text="المؤسسة" Foreground="#B3FFFFFF" FontSize="11" Margin="0,0,0,4"/>
-                                <TextBlock Text="ثانوية الامام الجزولي الاعدادية" Foreground="White" FontWeight="Bold"/>
+                                <TextBlock Text="{Binding InstitutionName}" Foreground="White" FontWeight="Bold"/>
                             </StackPanel>
                         </Border>
                         <Border Grid.Column="3" Background="#20FFFFFF" CornerRadius="12" Padding="16,12" Margin="6,0,0,0">
                             <StackPanel>
                                 <TextBlock Text="السنة الدراسية" Foreground="#B3FFFFFF" FontSize="11" Margin="0,0,0,4"/>
-                                <TextBlock Text="2025/2026" Foreground="White" FontWeight="Bold"/>
+                                <TextBlock Text="{Binding AcademicYear}" Foreground="White" FontWeight="Bold"/>
                             </StackPanel>
                         </Border>
                     </Grid>
@@ -261,7 +261,7 @@
                         </Button>
 
                         <!-- 3: بطاقة الغياب -->
-                        <Button Classes="menu-btn" Margin="8,0,8,0">
+                        <Button Classes="menu-btn" Margin="8,0,8,0" Command="{Binding OpenAbsenceCardDialogCommand}">
                             <Grid RowDefinitions="*,4">
                                 <StackPanel Grid.Row="0" Spacing="12" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="12">
                                     <Border Width="56" Height="56" CornerRadius="14">
