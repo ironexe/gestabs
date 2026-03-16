@@ -1,6 +1,5 @@
 using System.Threading.Tasks;
 using Avalonia.Controls;
-using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
 using MyAvaloniaApp.ViewModels;
 
@@ -18,20 +17,18 @@ public partial class AbsenceCardDialog : Window
             AcademicYear    = academicYear,
         };
 
-        // Wire up the save file picker
-        vm.PickSavePathRequested += async () =>
+        vm.PickSavePathRequested += async (suggestedName) =>
         {
             var options = new FilePickerSaveOptions
             {
-                Title           = "حفظ بطاقة الغياب",
-                SuggestedFileName = $"بطاقة_غياب_{vm.SelectedPersonnel?.NomLatin}",
+                Title             = "حفظ بطاقة الغياب",
+                SuggestedFileName = suggestedName,
                 DefaultExtension  = "pdf",
-                FileTypeChoices =
+                FileTypeChoices   =
                 [
                     new FilePickerFileType("PDF Files") { Patterns = ["*.pdf"] }
                 ]
             };
-
             var file = await StorageProvider.SaveFilePickerAsync(options);
             return file?.Path.LocalPath;
         };

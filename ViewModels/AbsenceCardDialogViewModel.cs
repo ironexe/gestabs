@@ -1,5 +1,6 @@
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -13,7 +14,6 @@ public partial class AbsenceCardDialogViewModel : ViewModelBase
     private readonly AbsenceService     _absenceService = new();
     private readonly AbsenceCardService _cardService    = new();
 
-    // ── Settings passed from main window ─────────────────────────────────────
     public string InstitutionName { get; set; } = string.Empty;
     public string AcademicYear    { get; set; } = string.Empty;
 
@@ -22,7 +22,7 @@ public partial class AbsenceCardDialogViewModel : ViewModelBase
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(HasSelectedPersonnel))]
-    [NotifyCanExecuteChangedFor(nameof(GenerateCommand))]
+    [NotifyCanExecuteChangedFor(nameof(GenerateSingleCommand))]
     private Personnel? _selectedPersonnel;
 
     public bool HasSelectedPersonnel => SelectedPersonnel is not null;
@@ -33,10 +33,8 @@ public partial class AbsenceCardDialogViewModel : ViewModelBase
     [ObservableProperty] private string _statusMessage = string.Empty;
     [ObservableProperty] private string _outputPath    = string.Empty;
 
-    // Raised so the View can open a SaveFileDialog (needs Window reference)
-    public event Func<Task<string?>>? PickSavePathRequested;
+    public event Func<string, Task<string?>>? PickSavePathRequested;
 
-    // ── Lifecycle ─────────────────────────────────────────────────────────────
     public AbsenceCardDialogViewModel()
     {
         _ = LoadPersonnelAsync();
@@ -50,16 +48,13 @@ public partial class AbsenceCardDialogViewModel : ViewModelBase
             PersonnelList.Add(p);
     }
 
-    // ── Commands ──────────────────────────────────────────────────────────────
-
-    [RelayCommand(CanExecute = nameof(CanGenerate))]
-    private async Task GenerateAsync()
+    // ── Single employee (landscape) ───────────────────────────────────────────
+    [RelayCommand(CanExecute = nameof(CanGenerateSingle))]
+    private async Task GenerateSingleAsync()
     {
-        // Ask the View for a save path
+        var suggested = $"بطاقة_غياب_{SelectedPersonnel?.NomLatin}";
         var path = PickSavePathRequested is not null
-            ? await PickSavePathRequested.Invoke()
-            : null;
-
+            ? await PickSavePathRequested.Invoke(suggested) : null;
         if (string.IsNullOrWhiteSpace(path)) return;
 
         IsBusy        = true;
@@ -73,11 +68,8 @@ public partial class AbsenceCardDialogViewModel : ViewModelBase
 
             await Task.Run(() =>
                 _cardService.Generate(
-                    SelectedPersonnel!,
-                    absences,
-                    InstitutionName,
-                    AcademicYear,
-                    path));
+                    SelectedPersonnel!, absences,
+                    InstitutionName, AcademicYear, path));
 
             OutputPath    = path;
             IsSuccess     = true;
@@ -88,11 +80,45 @@ public partial class AbsenceCardDialogViewModel : ViewModelBase
             IsSuccess     = false;
             StatusMessage = $"خطأ: {ex.Message}";
         }
-        finally
-        {
-            IsBusy = false;
-        }
+        finally { IsBusy = false; }
     }
 
-    private bool CanGenerate() => SelectedPersonnel is not null && !IsBusy;
+    private bool CanGenerateSingle() => SelectedPersonnel is not null && !IsBusy;
+
+    // ── All employees (portrait, 2 per page) ──────────────────────────────────
+    [RelayCommand]
+    private async Task GenerateAllAsync()
+    {
+        var path = PickSavePathRequested is not null
+            ? await PickSavePathRequested.Invoke("بطاقات_غياب_جميع_الموظفين") : null;
+        if (string.IsNullOrWhiteSpace(path)) return;
+
+        IsBusy        = true;
+        IsSuccess     = false;
+        StatusMessage = "جاري إنشاء بطاقات جميع الموظفين...";
+
+        try
+        {
+            // Load all absences for all personnel
+            var allData = new System.Collections.Generic.List<(Personnel, System.Collections.Generic.List<Absence>)>();
+            foreach (var p in PersonnelList)
+            {
+                var abs = await _absenceService.GetAbsencesForPersonnelAsync(p.Ppr);
+                allData.Add((p, abs));
+            }
+
+            await Task.Run(() =>
+                _cardService.GenerateAll(allData, InstitutionName, AcademicYear, path));
+
+            OutputPath    = path;
+            IsSuccess     = true;
+            StatusMessage = $"تم إنشاء {allData.Count} بطاقة بنجاح ✓";
+        }
+        catch (Exception ex)
+        {
+            IsSuccess     = false;
+            StatusMessage = $"خطأ: {ex.Message}";
+        }
+        finally { IsBusy = false; }
+    }
 }
